@@ -1,48 +1,41 @@
-import React from 'react';
+import React from "react";
+import { useState } from "react";
+import "./app.scss";
+import Header from "./components/header";
+import Footer from "./components/footer";
+import Form from "./components/form";
+import Results from "./components/results";
 
-import './app.scss';
+function App() {
+  const [data, setData] = useState(null);
+  const [requestParams, setRequestParams] = useState({});
 
-// Let's talk about using index.js and some other name in the component folder
-// There's pros and cons for each way of doing this ...
-import Header from './components/header';
-import Footer from './components/footer';
-import Form from './components/form';
-import Results from './components/results';
-
-class App extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: null,
-      requestParams: {},
-    };
-  }
-
-  callApi = (requestParams) => {
-    // mock output
-    const data = {
-      count: 2,
+  function callApi(requestParams) {
+    const newData = {
       results: [
-        {name: 'fake thing 1', url: 'http://fakethings.com/1'},
-        {name: 'fake thing 2', url: 'http://fakethings.com/2'},
+        // {name: 'fake thing 1', url: 'http://fakethings.com/1'},
+        // {name: 'fake thing 2', url: 'http://fakethings.com/2'},
+        {method:requestParams.method},
+        {url:requestParams.url},
+        {response:requestParams.data},
       ],
     };
-    this.setState({data, requestParams});
+
+    setData(newData);
+    setRequestParams(requestParams);
   }
 
-  render() {
-    return (
-      <React.Fragment>
-        <Header />
-        <div>Request Method: {this.state.requestParams.method}</div>
-        <div>URL: {this.state.requestParams.url}</div>
-        <Form handleApiCall={this.callApi} />
-        <Results data={this.state.data} />
-        <Footer />
-      </React.Fragment>
-    );
-  }
+  return (
+    <>
+      {/* {console.log(requestParams)} */}
+      <Header />
+      <div>Request Method: {requestParams.method}</div>
+      <div>URL: {requestParams.url}</div>
+      <Form handleApiCall={callApi} />
+      <Results data={data} />
+      <Footer />
+    </>
+  );
 }
 
 export default App;
