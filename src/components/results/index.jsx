@@ -1,23 +1,9 @@
-// import React from "react";
-
-// class Results extends React.Component {
-//   render() {
-//     return (
-//       <section>
-//         <pre>{this.props.data ? JSON.stringify(this.props.data, undefined, 2) : null}</pre>
-//       </section>
-//     );
-//   }
-// }
-
 function Results(props) {
   return (
     <>
       <section>
-        <pre>
-          {props.data
-            ? JSON.stringify(props.data, undefined, 2)
-            : null}
+        <pre data-testid="resultTest">
+          {props.data ? JSON.stringify(props.data, undefined, 2) : <h3>loading....</h3>}
         </pre>
       </section>
     </>

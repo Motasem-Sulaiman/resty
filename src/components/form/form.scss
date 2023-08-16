@@ -6,7 +6,13 @@ form {
   margin: auto;
   width: 200px;
   
-
+input{
+  margin-right:20px;
+  padding:10px;
+}
+span{
+  margin-top:5px;
+}
   label {
     display: flex;
     margin: 1rem 0;
@@ -19,17 +25,32 @@ form {
         color:white;
         background: rgb(90, 20, 20);
 
-        &:hover, &.active {
+        &:hover, &:active {
           background: darken($backgroundColor, 50);
         }
+     
       }
     }
+
+  }
+  button{
+    margin-right: 1rem;
+    padding: .25rem .5rem;
+    color:white;
+    background: rgb(90, 20, 20);
+  }
+  button:focus{
+    background-color:rgb(149, 122, 122);
   }
   #button{
     background-color:rgb(90, 20, 20);
     color:white;
+    margin-top:5px;
+    padding: 5px;
   }
   #button:hover {
     background-color: #535362;
   }
+
+ 
 }

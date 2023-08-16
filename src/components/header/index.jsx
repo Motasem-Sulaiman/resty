@@ -4,7 +4,7 @@ function Header() {
   return (
     <>
       <header>
-        <h1>RESTy</h1>
+        <h1 data-testid="headerTest">RESTy</h1>
       </header>
     </>
   );
