@@ -1,48 +1,109 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import "./app.scss";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Form from "./components/form";
 import Results from "./components/results";
 import axios from "axios";
+import History from "../History";
+
+const initialState = {
+  data: null,
+  requestParams: {},
+  history: [],
+  loading: false,
+  error: false,
+};
+
+const reducer = (state, action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case "FORM_DATA":
+      return {
+        ...state,
+        requestParams: payload,
+        history: [...state.history, payload],
+      };
+
+    case "STARTPAGE":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "GETDATA":
+      return {
+        ...state,
+        loading: false,
+        data: {
+          results: [
+            { method: state.requestParams.method },
+            { url: state.requestParams.url },
+            { response: payload },
+          ],
+        },
+        history: [
+          ...state.history,
+          [
+            { method: state.requestParams.method },
+            { url: state.requestParams.url },
+            { response: payload },
+          ],
+        ],
+      };
+    case "ERROR":
+      return {
+        ...state,
+        error: true,
+      };
+
+    default:
+      return state;
+  }
+};
 
 function App() {
-  const [data, setData] = useState(null);
-  const [requestParams, setRequestParams] = useState({});
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (requestParams.method === "get") {
+    if (state.requestParams.method === "get") {
+      dispatch({
+        type: "STARTPAGE",
+      });
+
       axios({
-        method: requestParams.method,
-        url: requestParams.url,
+        method: state.requestParams.method,
+        url: state.requestParams.url,
       })
         .then((res) => {
-          setData({
-            results: [
-              { method: requestParams.method },
-              { url: requestParams.url },
-              { response: res.data },
-            ],
-          });
+          dispatch({ type: "GETDATA", payload: res.data });
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
-          setData([]);
+          dispatch({ type: "ERROR" });
         });
     }
-  }, [requestParams]);
+  }, [state.requestParams]);
 
   function callApi(requestParams) {
-    setRequestParams(requestParams);
+    dispatch({
+      type: "FORM_DATA",
+      payload: requestParams,
+    });
+
+    // console.log(requestParams.method)
   }
 
   return (
     <>
+      {/* {console.log(state.history)} */}
       <Header />
-      <div>Request Method: {requestParams.method}</div>
-      <div>URL: {requestParams.url}</div>
+      <div>Request Method: {state.requestParams.method}</div>
+      <div>URL: {state.requestParams.url}</div>
+      <History historyData={state.history} />
       <Form handleApiCall={callApi} />
-      <Results data={data} />
+      <Results data={state.data} />
+      {state.loading ? <p>loading</p> : null}
       <Footer />
     </>
   );
