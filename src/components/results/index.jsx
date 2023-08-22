@@ -1,10 +1,11 @@
+import './result.scss'
 function Results(props) {
 
   return (
     <>
       <section>
-        <pre data-testid="resultTest">
-          {props.data ? JSON.stringify(props.data, undefined, 2) : <h3>loading....</h3>}
+        <pre data-testid="resultTest" id="result">
+          {props.data ? JSON.stringify(props.data, undefined, 2) : null}
           {/* {console.log(props.data)} */}
 {/* {props.data2&&(
 props.data2.map((item,index)=>{
